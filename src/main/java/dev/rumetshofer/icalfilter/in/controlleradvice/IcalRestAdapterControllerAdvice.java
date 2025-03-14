@@ -1,6 +1,7 @@
-package dev.rumetshofer.icalfilter.controllers;
+package dev.rumetshofer.icalfilter.in.controlleradvice;
 
 import dev.rumetshofer.icalfilter.core.ports.exceptions.CalendarNotFoundException;
+import dev.rumetshofer.icalfilter.in.IcalRestAdapter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

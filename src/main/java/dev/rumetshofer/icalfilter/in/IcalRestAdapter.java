@@ -1,4 +1,4 @@
-package dev.rumetshofer.icalfilter.controllers;
+package dev.rumetshofer.icalfilter.in;
 
 import dev.rumetshofer.icalfilter.core.ports.in.ForFilterIcalSource;
 import org.springframework.http.HttpHeaders;
