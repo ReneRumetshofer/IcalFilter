@@ -2,9 +2,9 @@ spring:
   application:
     name: icalfilter
   datasource:
-    url: ${POSTGRES_CONNECTION_STRING}
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/icalfilter
+    username: postgresuser
+    password: postgrespassword
   jpa:
     show-sql: true
   flyway:
