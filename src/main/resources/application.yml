@@ -11,3 +11,14 @@ spring:
     enabled: true
     validate-on-migrate: true
     locations: classpath:db/migrations
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://auth.rumetshofer.dev/realms/icalfilter
+
+server:
+  error:
+    whitelabel:
+      enabled: false
+  port: 8081

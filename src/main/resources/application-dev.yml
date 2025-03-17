@@ -1,13 +1,14 @@
 spring:
-  application:
-    name: icalfilter
   datasource:
     url: jdbc:postgresql://localhost:5432/icalfilter
     username: postgresuser
     password: postgrespassword
-  jpa:
-    show-sql: true
-  flyway:
-    enabled: true
-    validate-on-migrate: true
-    locations: classpath:db/migrations
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/icalfilter
+
+#logging:
+#  level:
+#    root: debug
