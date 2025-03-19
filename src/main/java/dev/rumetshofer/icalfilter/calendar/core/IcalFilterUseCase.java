@@ -5,7 +5,7 @@ import dev.rumetshofer.icalfilter.calendar.core.domain.datacarrier.EventFilterDa
 import dev.rumetshofer.icalfilter.calendar.core.ports.exceptions.CalendarNotFoundException;
 import dev.rumetshofer.icalfilter.calendar.core.ports.in.ForFilterIcalSource;
 import dev.rumetshofer.icalfilter.calendar.core.ports.out.ForFetchIcal;
-import dev.rumetshofer.icalfilter.calendar.core.ports.out.ForGetCalendar;
+import dev.rumetshofer.icalfilter.calendar.core.ports.out.ForCalendarRepository;
 import dev.rumetshofer.icalfilter.calendar.core.ports.out.ForGetEventFilters;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.Calendar;
@@ -20,13 +20,13 @@ import java.util.UUID;
 @Component
 public class IcalFilterUseCase implements ForFilterIcalSource {
 
-    private final ForGetCalendar forGetCalendar;
+    private final ForCalendarRepository forCalendarRepository;
     private final ForGetEventFilters forGetEventFilters;
     private final ForFetchIcal forFetchIcal;
     private final FilteringService filteringService;
 
-    public IcalFilterUseCase(ForGetCalendar forGetCalendar, ForGetEventFilters forGetEventFilters, ForFetchIcal forFetchIcal, FilteringService filteringService) {
-        this.forGetCalendar = forGetCalendar;
+    public IcalFilterUseCase(ForCalendarRepository forCalendarRepository, ForGetEventFilters forGetEventFilters, ForFetchIcal forFetchIcal, FilteringService filteringService) {
+        this.forCalendarRepository = forCalendarRepository;
         this.forGetEventFilters = forGetEventFilters;
         this.forFetchIcal = forFetchIcal;
         this.filteringService = filteringService;
@@ -34,7 +34,7 @@ public class IcalFilterUseCase implements ForFilterIcalSource {
 
     @Override
     public byte[] filter(UUID calendarUuid) throws IOException {
-        CalendarData calendarData = forGetCalendar.getCalendarByUuid(calendarUuid)
+        CalendarData calendarData = forCalendarRepository.getCalendarByUuid(calendarUuid)
                 .orElseThrow(() -> new CalendarNotFoundException(calendarUuid));
 
         Calendar calendar = forFetchIcal.fetchIcal(calendarData.externalUrl());
