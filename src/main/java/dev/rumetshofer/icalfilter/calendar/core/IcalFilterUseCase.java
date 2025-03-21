@@ -6,7 +6,7 @@ import dev.rumetshofer.icalfilter.calendar.core.ports.exceptions.CalendarNotFoun
 import dev.rumetshofer.icalfilter.calendar.core.ports.in.ForFilterIcalSource;
 import dev.rumetshofer.icalfilter.calendar.core.ports.out.ForFetchIcal;
 import dev.rumetshofer.icalfilter.calendar.core.ports.out.ForCalendarRepository;
-import dev.rumetshofer.icalfilter.calendar.core.ports.out.ForGetEventFilters;
+import dev.rumetshofer.icalfilter.calendar.core.ports.out.ForEventFilterRepository;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VEvent;
@@ -21,13 +21,13 @@ import java.util.UUID;
 public class IcalFilterUseCase implements ForFilterIcalSource {
 
     private final ForCalendarRepository forCalendarRepository;
-    private final ForGetEventFilters forGetEventFilters;
+    private final ForEventFilterRepository forEventFilterRepository;
     private final ForFetchIcal forFetchIcal;
     private final FilteringService filteringService;
 
-    public IcalFilterUseCase(ForCalendarRepository forCalendarRepository, ForGetEventFilters forGetEventFilters, ForFetchIcal forFetchIcal, FilteringService filteringService) {
+    public IcalFilterUseCase(ForCalendarRepository forCalendarRepository, ForEventFilterRepository forEventFilterRepository, ForFetchIcal forFetchIcal, FilteringService filteringService) {
         this.forCalendarRepository = forCalendarRepository;
-        this.forGetEventFilters = forGetEventFilters;
+        this.forEventFilterRepository = forEventFilterRepository;
         this.forFetchIcal = forFetchIcal;
         this.filteringService = filteringService;
     }
@@ -38,7 +38,7 @@ public class IcalFilterUseCase implements ForFilterIcalSource {
                 .orElseThrow(() -> new CalendarNotFoundException(calendarUuid));
 
         Calendar calendar = forFetchIcal.fetchIcal(calendarData.externalUrl());
-        List<EventFilterData> eventFilters = forGetEventFilters.getForCalendar(calendarUuid);
+        List<EventFilterData> eventFilters = forEventFilterRepository.getAllForCalendar(calendarUuid);
         List<VEvent> eventsToRemove = filteringService.getEventsToRemove(
                 calendar.getComponents().stream().filter(component -> component instanceof VEvent).map(component -> (VEvent) component).toList(),
                 eventFilters
