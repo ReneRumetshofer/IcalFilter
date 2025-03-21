@@ -10,5 +10,8 @@ public interface ForCalendarRepository {
 
     Optional<CalendarData> getCalendarByUuid(UUID uuid);
     List<CalendarData> getAllCalendars();
+    void createCalendar(CalendarData calendarData);
+    void updateCalendar(CalendarData calendarData);
+    void deleteCalendar(UUID uuid);
 
 }

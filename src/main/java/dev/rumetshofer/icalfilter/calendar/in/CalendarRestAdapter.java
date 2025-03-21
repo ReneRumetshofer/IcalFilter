@@ -1,12 +1,12 @@
 package dev.rumetshofer.icalfilter.calendar.in;
 
 import dev.rumetshofer.icalfilter.calendar.core.domain.datacarrier.CalendarData;
-import dev.rumetshofer.icalfilter.calendar.core.ports.exceptions.CalendarNotFoundException;
+import dev.rumetshofer.icalfilter.calendar.core.ports.in.ForCreateCalendar;
+import dev.rumetshofer.icalfilter.calendar.core.ports.in.ForDeleteCalendar;
 import dev.rumetshofer.icalfilter.calendar.core.ports.in.ForGetCalendar;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import dev.rumetshofer.icalfilter.calendar.core.ports.in.ForUpdateCalendar;
+import dev.rumetshofer.icalfilter.calendar.in.requests.ChangeCalendarRequest;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,9 +16,15 @@ import java.util.UUID;
 public class CalendarRestAdapter {
 
     private final ForGetCalendar forGetCalendar;
+    private final ForCreateCalendar forCreateCalendar;
+    private final ForUpdateCalendar forUpdateCalendar;
+    private final ForDeleteCalendar forDeleteCalendar;
 
-    public CalendarRestAdapter(ForGetCalendar forGetCalendar) {
+    public CalendarRestAdapter(ForGetCalendar forGetCalendar, ForCreateCalendar forCreateCalendar, ForUpdateCalendar forUpdateCalendar, ForDeleteCalendar forDeleteCalendar) {
         this.forGetCalendar = forGetCalendar;
+        this.forCreateCalendar = forCreateCalendar;
+        this.forUpdateCalendar = forUpdateCalendar;
+        this.forDeleteCalendar = forDeleteCalendar;
     }
 
     @GetMapping
@@ -27,8 +33,23 @@ public class CalendarRestAdapter {
     }
 
     @GetMapping("/{calendarUuid}")
-    public CalendarData getCalendarById(@RequestParam("calendarUuid") UUID calendarUuid) {
+    public CalendarData getCalendarById(@PathVariable("calendarUuid") UUID calendarUuid) {
         return forGetCalendar.getCalendarById(calendarUuid);
+    }
+
+    @PostMapping
+    public void createCalendar(@RequestBody ChangeCalendarRequest request) {
+        forCreateCalendar.createCalendar(request.externalUrl());
+    }
+
+    @PutMapping("/{calendarUuid}")
+    public void updateCalendar(@PathVariable("calendarUuid") UUID calendarUuid, @RequestBody ChangeCalendarRequest request) {
+        forUpdateCalendar.updateCalendar(calendarUuid, request.externalUrl());
+    }
+
+    @DeleteMapping("/{calendarUuid}")
+    public void deleteCalendar(@PathVariable("calendarUuid") UUID calendarUuid) {
+        forDeleteCalendar.deleteCalendar(calendarUuid);
     }
 
 }
